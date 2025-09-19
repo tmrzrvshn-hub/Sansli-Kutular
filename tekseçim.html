@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<title>Slot Qutular – Bir Qutu Aç</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+.box {
+  width: 180px;
+  height: 120px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+.box span {
+  display: block;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.4s ease;
+  position: absolute;
+}
+.box.show-taktika span.taktika,
+.box.show-oyun span.oyun {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  top: 50%;
+  left: 50%;
+}
+
+/* Qutu rəngləri */
+.red { background: #e74c3c; }
+.orange { background: #e67e22; }
+.yellow { background: #f1c40f; color: #000; }
+.green { background: #27ae60; }
+.blue { background: #3498db; }
+.purple { background: #9b59b6; }
+.pink { background: #ff6f91; }
+.lightblue { background: #1abc9c; }
+.lightgreen { background: #2ecc71; color: #000; }
+.redorange { background: #ff4500; }
+.brown { background: #8b4513; }
+.darkblue { background: #2c3e50; }
+.lightpurple { background: #b19cd9; }
+.redblack { background: #c0392b; }
+.yellowgreen { background: #b4d455; color: #000; }
+.bluebrown { background: #4a6fa5; }
+.lightorange { background: #ffa500; }
+.darkgreen { background: #006400; }
+.purpleblue { background: #6a5acd; }
+.redyellow { background: #ff6347; }
+</style>
+</head>
+<body>
+
+<script>
+// Taktika və oyun siyahısı
+const taktikaList = [
+  "Zig Zag","Tek Oyun","Martingale","Parlay","Basamak Yöntemi","Şemsiye",
+  "Üç Yıldız","Civciv","Tek Satır","d’Alembert ve Kont-d’Alembert Yöntemi",
+  "Küçük Adımlar","Artı-Eksi","Kontrolsüz","Pompalı Tüfek","Adım Adım",
+  "Moonshot","Şanslı Yedi","Oscar Grind Sistemi","Dalgayı Yakala","50 Dönüş"
+];
+
+const oyunList = [
+  ["Starburst","Gonzo’s Quest"],
+  ["Book of Ra","Mega Moolah","Dead or Alive"],
+  ["Rainbow Riches","Immortal Romance"],
+  ["Twin Spin","Wolf Gold","Thunderstruck II"],
+  ["Cleopatra","Bonanza"],
+  ["Jammin’ Jars","Vikings Go Berzerk","Fire Joker"],
+  ["Buffalo Blitz","Reactoonz"],
+  ["Big Bass Bonanza","Hotline","Legacy of Dead"],
+  ["Sweet Bonanza","Book of Dead"],
+  ["Piggy Riches","Extra Chilli","Valley of the Gods"],
+  ["Raging Rhino","Jack and the Beanstalk"],
+  ["Hot Safari","Diamond Mine Megaways","Monopoly Megaways"],
+  ["Temple Tumble","Gonzo’s Quest Megaways"],
+  ["Twin Spin Deluxe","Wild Toro","Big Time Gaming: Bonanza"],
+  ["Immortal Guild","Reactoonz 2"],
+  ["Dragon Kingdom","Reel Rush"],
+  ["Sakura Fortune","Fruit Shop Megaways","Blood Suckers"],
+  ["Rise of Olympus","Moon Princess"],
+  ["Jammin’ Jars 2","Vikings Go to Hell"],
+  ["The Dog House","Mega Fortune","Extra Chilli Megaways"]
+];
+
+const colors = ["red","orange","yellow","green","blue","purple","pink","lightblue","lightgreen","redorange","brown","darkblue","lightpurple","redblack","yellowgreen","bluebrown","lightorange","darkgreen","purpleblue","redyellow"];
+
+// Səs effekti
+const audio = new Audio("https://freesound.org/data/previews/331/331912_3248244-lq.mp3");
+
+// Global flag: bir qutu açıldısa digər qutular deaktiv olsun
+let oneBoxOpened = false;
+
+// Qutuların yaradılması
+for(let i=0;i<20;i++){
+  const box = document.createElement("div");
+  box.className = "box " + colors[i];
+  box.dataset.state = "initial"; 
+  box.innerHTML = `<div>${i+1}</div>
+                   <span class="taktika">${taktikaList[i]}</span>
+                   <span class="oyun">${oyunList[i].join("<br>")}</span>`;
+  
+  box.addEventListener("click", function(e){
+    e.stopPropagation();
+    if(oneBoxOpened && this.dataset.state === "initial"){
+      // digər qutular deaktivdir
+      return;
+    }
+    audio.currentTime = 0;
+    audio.play();
+    if(this.dataset.state === "initial"){
+      this.dataset.state = "taktika";
+      this.classList.add("show-taktika");
+      oneBoxOpened = true; // artıq bir qutu açıldı
+    } else if(this.dataset.state === "taktika"){
+      this.dataset.state = "oyun";
+      this.classList.remove("show-taktika");
+      this.classList.add("show-oyun");
+    }
+  });
+  document.body.appendChild(box);
+}
+</script>
+
+</body>
+</html>
